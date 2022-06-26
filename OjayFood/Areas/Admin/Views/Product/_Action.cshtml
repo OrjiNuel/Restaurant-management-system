@@ -1,0 +1,134 @@
+﻿@model OjayFood.Areas.Admin.Models.ProductActionViewModel
+
+@if (Model != null)
+{
+    <div class="modal-content">
+        <form id="actionForm">
+            <h5 class="modal-header">
+                @if (Model.Id > 0)
+                {
+                    <span>Edit Product</span>
+                }
+                else
+                {
+                    <span>Create Product</span>
+                }
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </h5>
+            <div class="modal-body">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" name="Name" placeholder="Enter Product Name" value="@Model.Name">
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <textarea class="form-control" name="Price" placeholder="Enter Product Price">@Model.Price</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Product Manufacture Date</label>
+                    <textarea class="form-control" name="Mfg_Date" placeholder="Enter Product Manufacture Date">@Model.Mfg_Date</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Product Expiry Date</label>
+                    <textarea class="form-control" name="Exp_Date" placeholder="Enter Product Expiry Date">@Model.Exp_Date</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <textarea class="form-control" name="Category" placeholder="Enter Product Category">@Model.Category</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" name="Description" placeholder="Enter Product Description">@Model.Description</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Images</label>
+                    <input id="selectImages" class="form-control" name="Images" type="file" multiple>
+                    <input type="hidden" name="imageIDs" id="imageIDs" value="" />
+                </div>
+                <div id="imagesArea">
+                    @if (Model.ProductImages != null && Model.ProductImages.Count > 0)
+                    {
+                        foreach (var productImage in Model.ProductImages)
+                        {
+                            <img src="~/Images/Site/@productImage.Image.URL" class="img-fluid" style="width:200px" onclick="removeMe(this)" data-id="@productImage.ImageID" />
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                <input id="actionButton" type="submit" class="btn btn-success" value="Add">
+            </div>
+        </form>
+    </div>
+}
+
+<div id="imageTemplate">
+    <img src="" class="img-fluid" style="width:200px" onclick="removeMe(this)"/>
+</div>
+
+<script>
+    $("#actionButton").click(function () {
+
+        var imageIDs = [];
+        $("#imagesArea img").each(function () {
+            var imgID = $(this).attr("data-id");
+
+            imageIDs.push(imgID);
+        });
+
+        $("#imageIDs").val(imageIDs.join());
+
+        $.ajax({
+            url:  '@Url.Action("Action", "Product")',
+            type: "post",
+            data: $("#actionForm").serialize()
+        })
+        .done(function (response) {
+            if (response.Success)
+            {
+                location.reload();
+            }
+            else
+            {
+                $(".errorDiv").html(response.Message);
+            }
+        });
+    });
+
+    $("#selectImages").change(function () {
+
+        var images = this.files;
+
+        var formData = new FormData();
+
+        for (var i = 0; i < images.length; i++) {
+            formData.append("Image", images[i]);
+        }
+
+        $.ajax({
+            url:  '@Url.Action("UploadImages", "Dashboard")',
+            type: "post",
+            data: formData,
+            processData: false,
+            contentType: false
+        })
+        .done(function (response) {
+            for (var i = 0; i < response.length; i++) {
+                var image = response[i];
+
+                var $imgHTML = $("#imageTemplate").clone();
+
+                $imgHTML.find("img").attr("src", "/Images/Site/" + image.URL);
+                $imgHTML.find("img").attr("data-id", image.ID);
+
+                $("#imagesArea").append($imgHTML.html());   
+            }            
+        });
+    });
+
+    function removeMe(element) {
+        element.remove();
+    }
+</script>

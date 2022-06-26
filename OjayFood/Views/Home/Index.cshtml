@@ -1,0 +1,107 @@
+﻿@model OjayFood.Areas.Admin.Models.ProductListViewModel
+
+
+@{
+    ViewBag.Title = "OjayFood";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<div id="themeSlider" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#themeSlider" data-slide-to="0" class="active"></li>
+        <li data-target="#themeSlider" data-slide-to="1"></li>
+        <li data-target="#themeSlider" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="item active">
+            <div class="imgOverlay"></div>
+            <img style="height:320px;width:100%" src="../Images/Restaurant~2.jpg" alt="First slide">
+            <div class="carousel-caption">
+                <h3>The Restaurant</h3>
+
+            </div>
+        </div>
+        <div class="item">
+            <div class="imgOverlay"></div>
+            <img style="height:320px;width:100%" src="../Images/Foodstuff.jpg" alt="Second slide">
+            <div class="carousel-caption">
+                <h3>Food Items</h3>
+
+            </div>
+        </div>
+        <div class="item">
+            <div class="imgOverlay"></div>
+            <img style="height:320px;width:100%" src="../Images/Fooddelivered.jpg" alt="Third slide">
+            <div class="carousel-caption">
+                <h3>Home Delivery</h3>
+
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#themeSlider" data-slide="prev">
+        <span class="fa fa-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#themeSlider" data-slide="next">
+        <span class="fa fa-chevron-right"></span>
+    </a>
+
+</div>
+<div class="olContent f1"><h2 style="color:black">Search Product/Category</h2></div>
+<form method="post">
+    <div class="olSearch fr">
+        <input type="text" name="search" placeholder="Enter Keyword" class="inputComn form-control" />
+        <div class="searchIcon">
+            <button type="submit" class="searchBtn">
+                <img src="~/Images/searchIcon.png" />
+            </button>
+        </div>
+    </div>
+</form>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>Our Products <small>trends products</small></h2>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper">
+    @if (Model.Products != null)
+    {
+        <div class="container">
+            <div class="row">
+                @foreach (var products in Model.Products)
+                {
+                    <div class="col-md-3 col-sm-3 col-xs-6" style="margin-bottom:8px">
+                        <div class="thumbnail product-item" style="height:300px">
+                            <div class="product-image">
+                                <img style="height:170px;width:100%" src="~/Images/Site/@products.ProductURL" alt="...">
+                                <div class="caption">
+                                    <h3>
+                                        <strong>@products.Name</strong>
+                                        <span class="label label-primary">@products.Price.ToString("c")</span>
+                                    </h3>
+                                    <p>@products.Description</p>
+
+                                    <p>
+                                        @using (Html.BeginForm("AddToCart", "Home", new { productId = products.Id }, FormMethod.Post))
+                                        {
+                                            <button type="submit" class="center-block"><i class="fa fa-shopping-cart"></i>Add To Cart</button>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@*<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index",
+        new { page = x, category = Model.CurrentCategory }))
+</div>*@

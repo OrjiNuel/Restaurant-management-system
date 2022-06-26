@@ -1,0 +1,82 @@
+﻿@model OjayFood.Areas.Admin.Models.PaymentTypeViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="~/Areas/Admin/Content/css/styles.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<body>
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>Manage <b>PaymentTypes</b></h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>
+                            @Html.ActionLink("Add New Payment Type", "Create", "", new { @class = "btn btn-primary" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.PaymentTypes != null)
+                    {
+                        foreach (var paymentTypes in Model.PaymentTypes)
+                        {
+                            <tr>
+                                <td>
+                                    @paymentTypes.Name
+                                </td>
+
+                                <td>
+                                    @*@Html.ActionLink("Details", "Details", new { id = department.ID }, new { @class = "btn btn-info" })*@
+                                    @Html.ActionLink("Edit", "Edit", new { id = paymentTypes.Id }, new { @class = "btn btn-primary" })
+                                    @*@Html.ActionLink("Delete", "Delete", new { id = department.ID }, new { @class = "btn btn-danger" })*@
+                                    <button data-href="@Url.Action("Delete", "PaymentType", new { id = paymentTypes.Id })" type="button" class="data-btn btn btn-danger" data-toggle="modal" data-target="#actionModal"><i class="fa-solid fa-trash-can mr-1"></i>Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal HTML -->
+    <div id="actionModal" class="modal fade" style="height:auto; width:50%; position:center">
+        <div class="modal-dialog" role="document">
+
+        </div>
+    </div>
+</body>
+
+<script>
+    $(".data-btn").click(function () {
+        $.ajax({
+            url: $(this).attr("data-href"),
+            type: "get",
+        })
+            .done(function (response) {
+                $("#actionModal").html(response);
+            });
+    });
+</script>
+
+

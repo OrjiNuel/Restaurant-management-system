@@ -1,0 +1,72 @@
+﻿@model OjayFood.Domain.Entities.ShippingDetail
+
+@{
+    ViewBag.Title = "Delivery";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+
+<div>
+    <h3>
+        <strong>TOTAL AMOUNT TO PAY</strong>  
+        <span class="label label-primary">@ViewBag.Total</span>
+    </h3>
+</div>
+
+
+<p>Please enter your details, and we'll deliver your goods right away!</p>
+
+@using (Html.BeginForm())
+{
+
+    @Html.ValidationSummary()
+    <h3>Ship to</h3>
+    <div class="form-group">
+        <label>Name:</label>
+        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+    </div>
+
+    <h3>Address</h3>
+
+    <div class="form-group">
+        <label>Line 1:</label>
+        @Html.TextBoxFor(x => x.Line1, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>Line 2:</label>
+        @Html.TextBoxFor(x => x.Line2, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>Line 3:</label>
+        @Html.TextBoxFor(x => x.Line3, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>City:</label>
+        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>State:</label>
+        @Html.TextBoxFor(x => x.State, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>Zip:</label>
+        @Html.TextBoxFor(x => x.Zip, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>Country:</label>
+        @Html.TextBoxFor(x => x.Country, new { @class = "form-control" })
+    </div>
+
+    <h3>Options</h3>
+    <div class="checkbox">
+        <label>
+            @Html.EditorFor(x => x.GiftWrap)
+            Gift wrap these items
+        </label>
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-success" href="@Url.Action("Index","Payment")">Complete Order</a>
+    </div>
+}
+

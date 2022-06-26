@@ -1,0 +1,54 @@
+﻿@model OjayFood.Areas.Admin.Models.ProductListViewModel
+
+
+@if (Model != null && Model.Products != null && Model.Products.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Mfg_Date</th>
+                <th scope="col">Exp_Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Products != null)
+            {
+                foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>
+                            @product.Name
+                        </td>
+                        <td>
+                            @product.Price
+                        </td>
+                        <td>
+                            @product.Mfg_Date
+                        </td>
+                        <td>
+                            @product.Exp_Date
+                        </td>
+                        <td>
+                            @product.Category
+                        </td>
+                        <td>
+                            <button data-href="@Url.Action("Action", "Product", new { Id = product.Id })" type="button" class="data-btn btn btn-success" data-bs-toggle="modal" data-bs-target="#actionModal"><i class="fa-solid fa-pen mr-1"></i>Edit</button>
+                            <button data-href="@Url.Action("Delete", "Product", new { Id = product.Id })" type="button" class="data-btn btn btn-danger" data-bs-toggle="modal" data-bs-target="#actionModal"><i class="fa-solid fa-trash-can mr-1"></i>Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        Sorry! No records exist.
+    </div>
+}

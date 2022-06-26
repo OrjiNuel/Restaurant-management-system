@@ -1,0 +1,61 @@
+﻿@using OjayFood.Models.Home;
+
+@{
+    ViewBag.Title = "CheckoutDetails";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+
+<h2>CheckoutDetails</h2>
+
+@if (Session["cart"] == null)
+{
+    <div class="alert alert-danger">
+        <strong>No product added to cart!</strong>
+    </div>
+
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Line Total</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int Total = 0;
+            }
+            @foreach (Item item in (List<Item>)Session["cart"])
+            {
+                int lineTotal = Convert.ToInt32(item.Quantity * item.Product.Price);
+                Total = Convert.ToInt32(@Total + lineTotal);
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@lineTotal</td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="4" class="text-right"><b>Total: @Total</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        @Html.ActionLink("Checkout now", "Delivery", null, new { @class = "btn btn-primary" })
+        
+    </div>
+
+}
+
+
+
+

@@ -1,0 +1,77 @@
+﻿@model OjayFood.Domain.Entities.Payment
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Select Payment Type</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="dropdown">
+                <div class="form-group col-md-6">
+                    @Html.Label("Payment Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.PaymentTypeId, (List<SelectListItem>)ViewBag.paymentType_list, "Select", new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PaymentTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+   
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.CardNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CardNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" onclick="MakePayment()" class="btn btn-primary">Pay</button>
+        </div>
+    </div>
+}
+
+<script>
+    function MakePayment() {
+
+        $.ajax({
+            url: 'https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                amount:@Model.Amount,
+
+            },
+            success: function (response) {
+                alert('Payment made');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error: ' + jqXHR.status);
+            } // <-- remove the trailing comma you had here
+        });
+    }
+</script>
+

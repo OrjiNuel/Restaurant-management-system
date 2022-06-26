@@ -1,0 +1,116 @@
+﻿@model OjayFood.Areas.Admin.Models.PaymentTypeViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div>
+    <h3>
+        <strong>TOTAL AMOUNT TO PAY</strong>
+        <span class="label label-primary">@ViewBag.Total</span>
+    </h3>
+</div>
+
+<p>Select payment method</p>
+
+<div class="well well-lg">
+    @if (Model.PaymentTypes != null)
+    {
+        <div class="container">
+            @foreach (var payType in Model.PaymentTypes)
+            {
+                <ul>
+                    <li>
+                        <a data-href="@Url.Action("Add", "Payment")" class="data-btn btn btn-success" 
+                           data-toggle="modal" data-target="#actionModal">@payType.Name
+                        </a>
+                    </li>
+                </ul>
+            }
+        </div>
+    }
+</div>
+
+
+<!-- Modal HTML -->
+<div id="actionModal" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complete Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group col-md-6">
+                    @Html.Label("Phone", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.Label("Card Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CardNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.Label("Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" onclick="MakePayment()" class="btn btn-primary">Pay now:@ViewBag.Total</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".data-btn").click(function () {
+        $.ajax({
+            url: $(this).attr("data-href"),
+            type: "get",
+        })
+        .done(function (response) {
+            $("#actionModal").html(response);
+        });
+    });
+
+    function MakePayment() {
+        var cardnum = ('#CardNumber').val();
+        var phone = ('#Phone').val();
+        var desc = ('#Description').val();
+
+        $.ajax({
+            url: 'https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                amount: @ViewBag.Total,
+                currency: 'NG',
+                externalId: cardnum,
+                partyId: phone,
+                payerMessage: desc,
+            },
+            success: function (response) {
+                alert('Payment made');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error: ' + jqXHR.status);
+            } // <-- remove the trailing comma you had here
+        });
+    }
+</script>
