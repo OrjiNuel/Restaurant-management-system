@@ -16,7 +16,7 @@ namespace OjayFood.Domain.Concrete
         public string MailFromAddress = "maddoxjohn742@gmail.com";
         public bool UseSsl = true;
         public string Username = "maddoxjohn742";
-        public string Password = "Worldwide31";
+        public string Password = "";
         public string ServerName = "smtp.google.com";
         public int ServerPort = 587;
         public bool WriteAsFile = false;
